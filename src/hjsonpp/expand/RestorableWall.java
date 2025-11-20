@@ -25,7 +25,7 @@ public class RestorableWall extends Wall{
         boolean canHeal = true;
 
         @Override
-        public void updateTile() {
+        public void updateTile(){
             canHeal = true;
             charge += Time.delta;
             if(charge >= healReload && canHeal && health() < maxHealth()) {
