@@ -14,7 +14,7 @@ import mindustry.ui.Styles;
 import static mindustry.Vars.iconSmall;
 
 public class TextDialog extends LStatement{
-    public String text = ":3", unit = "@dagger";
+    public String text = ":3", unit = "@dagger", uiTemplate = "black;
     public String duration = "5";
     public String useBundles = "true";
 
@@ -64,6 +64,10 @@ public class TextDialog extends LStatement{
         table.add(" use Bundles ");
 
         fields(table, useBundles, g -> useBundles = g);
+
+        table.add(" UI template ");
+
+        TextField fielda = fielda(table, uiTemplate, str -> uiTemplate = str).get();
     }
 
     @Override
@@ -73,7 +77,7 @@ public class TextDialog extends LStatement{
 
     @Override
     public LExecutor.LInstruction build(LAssembler builder) {
-        return new TextDialogI(builder.var(text), builder.var(unit), builder.var(duration), builder.var(useBundles));
+        return new TextDialogI(builder.var(text), builder.var(unit), builder.var(duration), builder.var(useBundles), builder.var(uiTemplate);
     }
 
     @Override
@@ -91,5 +95,7 @@ public class TextDialog extends LStatement{
         builder.append(duration);
         builder.append(" ");
         builder.append(useBundles);
+        builder.append(" ");
+        builder.append(uiTemplate);
     }
 }
