@@ -10,9 +10,9 @@ import mindustry.ui.Bar;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 
 public class OverHeatTurret extends ItemTurret{
-    // overheat amount required to overheat
+    // heat amount required to overheat
     public float overheatAmount = 25f;
-    // how much time needed to cooldown turret
+    // how much time needs to cooldown the turret
     public float timeToCooldown = 240;
 
     public OverHeatTurret(String name){
@@ -31,7 +31,7 @@ public class OverHeatTurret extends ItemTurret{
         );
     }
 
-    public class  OverHeatTurretBuild extends ItemTurretBuild{
+    public class OverHeatTurretBuild extends ItemTurretBuild{
         public float overHeat = 0;
         @Override
         public void updateTile() {
