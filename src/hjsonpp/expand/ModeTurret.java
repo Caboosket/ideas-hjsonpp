@@ -1,6 +1,7 @@
 package hjsonpp.expand;
 
 import arc.Core;
+import arc.audio.Sound;
 import arc.graphics.Color;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
@@ -57,17 +58,11 @@ public class ModeTurret extends ItemTurret{
     @Override
     public void load(){
         super.load();
-        defaultIcon = Core.atlas.find("hjsonpp-turret-mode-default");
         for(TurretMode t : turretModes){
             t.load();
         }
     }
 
-    @Override
-    public void init(){
-        super.init();
-        turretModes.insert(0, defaultMode);
-    }
 
     public ModeTurret(String name) {
         super(name);
@@ -90,16 +85,20 @@ public class ModeTurret extends ItemTurret{
         public float rotateSpeedMultiplier = 1;
         public float rangeChange = 0;
         public float targetIntervalMultiplier = 1;
+        public float ammoUseMultiplier = 1;
+        public int ammoUseChange = 0;
+        public Sound modeSound = Sounds.none;
 
         @Nullable
         public ShootPattern modePattern;
+
         public TextureRegion icon;
         public void load(){
-            icon = Core.atlas.find(path+"turret-mode-" + this.name);
+            icon = Core.atlas.find(path+"-turret-mode-" + this.name);
         }
 
         public TextureRegion icon(){
-            return Objects.equals(this.name, "default") ? defaultIcon : !icon.found() ? defaultIcon  : icon;
+            return icon;
         }
         public TurretMode() {}
 
@@ -128,7 +127,7 @@ public class ModeTurret extends ItemTurret{
         public int currentTurretMode;
 
         public TurretMode getMode(){
-            return turretModes.get(currentTurretMode);
+            return !turretModes.isEmpty() &  turretModes.get(currentTurretMode) != null ? turretModes.get(currentTurretMode) : defaultMode;
         }
 
         float lastRangeChange;
@@ -306,7 +305,7 @@ public class ModeTurret extends ItemTurret{
 
             (shootEffect == null ? type.shootEffect : shootEffect).at(bulletX, bulletY, rotation + angleOffset, type.hitColor);
             (smokeEffect == null ? type.smokeEffect : smokeEffect).at(bulletX, bulletY, rotation + angleOffset, type.hitColor);
-            (type.shootSound != Sounds.none ? type.shootSound : shootSound).at(bulletX, bulletY, Mathf.random(soundPitchMin, soundPitchMax), shootSoundVolume);
+            (getMode().modeSound != Sounds.none ? getMode().modeSound :  type.shootSound != Sounds.none ? type.shootSound : shootSound).at(bulletX, bulletY, Mathf.random(soundPitchMin, soundPitchMax), shootSoundVolume);
 
             ammoUseEffect.at(
                     x - Angles.trnsx(rotation, ammoEjectBack),
@@ -328,6 +327,51 @@ public class ModeTurret extends ItemTurret{
             if(!consumeAmmoOnce){
                 useAmmo();
             }
+        }
+
+        @Override
+        public BulletType useAmmo(){
+            if(cheating()) return peekAmmo();
+            TurretMode mode = getMode();
+            AmmoEntry entry = ammo.peek();
+
+            if(mode == null) {
+                entry.amount -= ammoPerShot;
+            } else if(mode.ammoUseChange == 0) {
+                entry.amount -= Math.round(ammoPerShot * mode.ammoUseMultiplier);
+            } else entry.amount -= ammoPerShot + mode.ammoUseChange;
+
+            if(entry.amount <= 0) ammo.pop();
+            if(mode == null) {
+                totalAmmo -= ammoPerShot;
+            } else if(mode.ammoUseChange == 0) {
+                totalAmmo -= Math.round(ammoPerShot * mode.ammoUseMultiplier);
+            } else totalAmmo -= ammoPerShot + mode.ammoUseChange;
+
+            totalAmmo = Math.max(totalAmmo, 0);
+            return entry.type();
+        }
+
+        @Override
+        public boolean hasAmmo(){
+            TurretMode mode = getMode();
+            int ammoUseNow;
+            if(mode == null) {
+                ammoUseNow = ammoPerShot;
+            } else if(mode.ammoUseChange == 0) {
+                ammoUseNow = Math.round(ammoPerShot * mode.ammoUseMultiplier);
+            } else ammoUseNow = ammoPerShot + mode.ammoUseChange;
+
+            if(ammo.size >= 2 && ammo.peek().amount < ammoUseNow){
+                for(int i = 0; i < ammo.size; i ++){
+                    if(ammo.get(i).amount >= ammoUseNow){
+                        ammo.swap(ammo.size - 1, i);
+                        break;
+                    }
+                }
+            }
+            if(!canConsume()) return false;
+            return ammo.size > 0 && (ammo.peek().amount >= ammoUseNow || cheating());
         }
 
         @Override
@@ -384,7 +428,7 @@ public class ModeTurret extends ItemTurret{
                     }, Styles.clearNoneTogglei, ()->{
                         configure(bid);
                         deselect();
-                    }).growX().size(40).tooltip(Core.bundle.format("fire.turret.mode."  + tm.name));
+                    }).growX().size(47.5f).tooltip(Core.bundle.format("fire.turret.mode."  + tm.name));
                 }}).grow();
         }
 
@@ -401,6 +445,11 @@ public class ModeTurret extends ItemTurret{
             super.read(read, revision);
 
             currentTurretMode = read.i();
+        }
+
+        @Override
+        public Object config(){
+            return currentTurretMode;
         }
 
     }
