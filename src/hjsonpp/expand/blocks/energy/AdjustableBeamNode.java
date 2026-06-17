@@ -1,4 +1,4 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.energy;
 
 import arc.graphics.g2d.Draw;
 import arc.math.Mathf;

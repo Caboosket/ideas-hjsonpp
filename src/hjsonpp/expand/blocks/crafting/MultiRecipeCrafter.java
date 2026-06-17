@@ -1,14 +1,11 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.crafting;
 
 import arc.Core;
-import arc.func.Func;
 import arc.graphics.Color;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.scene.ui.layout.Table;
 import arc.struct.EnumSet;
-import arc.struct.ObjectMap;
-import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.Eachable;
 import arc.util.Strings;
@@ -23,13 +20,11 @@ import mindustry.entities.Effect;
 import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
 import mindustry.gen.Icon;
-import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
 import mindustry.type.LiquidStack;
-import mindustry.ui.Bar;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.consumers.Consume;
@@ -37,7 +32,6 @@ import mindustry.world.consumers.ConsumePowerDynamic;
 import mindustry.world.draw.DrawBlock;
 import mindustry.world.draw.DrawDefault;
 import mindustry.world.meta.BlockFlag;
-import mindustry.world.meta.StatValue;
 
 public class MultiRecipeCrafter extends Block {
 

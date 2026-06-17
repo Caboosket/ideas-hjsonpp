@@ -1,9 +1,8 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.production;
 
 import arc.*;
 import arc.func.Cons;
 import arc.func.Intc2;
-import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
 import arc.math.geom.*;
@@ -11,7 +10,6 @@ import arc.struct.*;
 import arc.util.*;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
-import mindustry.Vars;
 import mindustry.entities.Effect;
 import mindustry.entities.units.*;
 import mindustry.game.*;

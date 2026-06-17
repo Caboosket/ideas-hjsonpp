@@ -1,4 +1,4 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.crafting;
 
 import arc.Core;
 import arc.util.Nullable;

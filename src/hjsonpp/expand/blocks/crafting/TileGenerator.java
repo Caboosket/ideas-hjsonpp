@@ -1,4 +1,4 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.crafting;
 
 import arc.struct.Seq;
 import arc.util.Scaling;

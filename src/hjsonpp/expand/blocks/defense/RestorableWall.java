@@ -1,4 +1,4 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.defense;
 
 import arc.util.Time;
 import hjsonpp.expand.meta.AdditionalStats;

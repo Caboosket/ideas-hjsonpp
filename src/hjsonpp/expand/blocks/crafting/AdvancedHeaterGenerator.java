@@ -1,4 +1,4 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.crafting;
 
 import arc.math.Mathf;
 import arc.util.io.*;

@@ -1,4 +1,4 @@
-package hjsonpp.expand;
+package hjsonpp.expand.blocks.storage;
 
 import arc.Core;
 import arc.func.Func;
