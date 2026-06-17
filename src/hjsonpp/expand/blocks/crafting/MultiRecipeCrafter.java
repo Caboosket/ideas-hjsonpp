@@ -48,7 +48,6 @@ public class MultiRecipeCrafter extends Block {
         super(name);
         configurable = true;
         update = true;
-        solid = true;
         hasItems = true;
         sync = true;
         flags = EnumSet.of(BlockFlag.factory);
@@ -483,6 +482,11 @@ public class MultiRecipeCrafter extends Block {
             }).padRight(3);
         }
 
+        @Override
+        public Object config(){
+            return recipeIDX;
+        }
+
         //Saving and load functions
         @Override
         public void write(Writes write) {
@@ -490,7 +494,6 @@ public class MultiRecipeCrafter extends Block {
 
             write.i(recipeIDX);
             write.f(progress);
-
         }
 
         @Override
