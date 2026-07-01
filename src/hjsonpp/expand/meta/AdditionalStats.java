@@ -6,6 +6,7 @@ import mindustry.world.meta.StatCat;
 public class AdditionalStats{
     public static Stat
             healPercent = new Stat("heal-percent", StatCat.general),
+            healAmount = new Stat("heal-amount", StatCat.general),
             produceChance = new Stat("produce-chance", StatCat.crafting),
             reloadFrom = new Stat("reload-from", StatCat.function),
             reloadTo = new Stat("reload-from", StatCat.function),

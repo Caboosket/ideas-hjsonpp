@@ -7,6 +7,8 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.scene.ui.layout.Table;
+import arc.struct.ObjectMap;
+import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Time;
@@ -22,6 +24,7 @@ import mindustry.gen.Building;
 import mindustry.gen.Sounds;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
+import mindustry.type.Item;
 import mindustry.ui.Bar;
 import mindustry.ui.Styles;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
@@ -46,6 +49,7 @@ public class ModeTurret extends ItemTurret{
     @Override
     public void setBars(){
         super.setBars();
+        removeBar("items");
         addBar("currentMode", (ModeTurretBuild entity) ->
                 new Bar(
                         () -> Core.bundle.format("turret.mode." + entity.getMode().name),
@@ -76,6 +80,8 @@ public class ModeTurret extends ItemTurret{
     }
 
     public static class TurretMode{
+        @Nullable
+        public ObjectMap<Item, BulletType> modeAmmoTypes;
         //"modname"
         public String path = "hjsonpp";
         public String name = "";
@@ -372,6 +378,17 @@ public class ModeTurret extends ItemTurret{
             }
             if(!canConsume()) return false;
             return ammo.size > 0 && (ammo.peek().amount >= ammoUseNow || cheating());
+        }
+
+        @Override
+        public BulletType peekAmmo(){
+            TurretMode mode = getMode();
+            if(mode.modeAmmoTypes != null && !ammo.isEmpty()){
+                Item item = ((ItemEntry)ammo.peek()).item;
+                BulletType custom = mode.modeAmmoTypes.get(item);
+                if(custom != null) return custom;
+            }
+            return super.peekAmmo();
         }
 
         @Override
