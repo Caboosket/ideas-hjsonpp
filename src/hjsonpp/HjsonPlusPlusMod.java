@@ -1,9 +1,6 @@
 package hjsonpp;
 
-import arc.Core;
 import arc.Events;
-import arc.struct.Seq;
-import arc.util.Log;
 import hjsonpp.expand.blocks.energy.AdjustableBeamNode;
 import hjsonpp.expand.blocks.crafting.*;
 import hjsonpp.expand.blocks.defense.*;
@@ -13,17 +10,11 @@ import hjsonpp.expand.customAbilities.*;
 import hjsonpp.expand.graphics.g3d.*;
 import hjsonpp.expand.wproc.*;
 import mindustry.game.EventType;
-import mindustry.Vars;
-import mindustry.game.EventType;
 import mindustry.mod.*;
 
 import static arc.Core.app;
-import static mindustry.Vars.mods;
-import static mindustry.Vars.ui;
 
 public class HjsonPlusPlusMod extends Mod{
-
-    String[] modTurnOffBlacklist = {"as","thezsia1", "deepsea"};
 
     public HjsonPlusPlusMod(){
         Events.on(EventType.FileTreeInitEvent.class, e ->
@@ -60,22 +51,5 @@ public class HjsonPlusPlusMod extends Mod{
     @Override
     public void loadContent(){
         HjsonppLogic.init();
-        Events.on(EventType.ClientLoadEvent.class, e->{
-            boolean r = false;
-            Seq<String> modNames = new Seq<>();
-            for(String n : modTurnOffBlacklist){
-                Mods.LoadedMod m  = mods.getMod(n);
-                if(m != null && m.enabled()) {
-                    r = true;
-                    modNames.add(m.name + ";");
-                    mods.setEnabled(m, false);
-                }
-            }
-            if(r){
-                ui.showOkText("No access","All blacklist mods are disabled\n"+ modNames, ()->{
-                    Core.app.exit();
-                });
-            }
-        });
     }
 }
