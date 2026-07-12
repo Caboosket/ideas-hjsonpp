@@ -7,6 +7,8 @@ import hjsonpp.expand.blocks.defense.*;
 import hjsonpp.expand.blocks.environment.*;
 import hjsonpp.expand.blocks.storage.*;
 import hjsonpp.expand.customAbilities.*;
+import hjsonpp.expand.entities.bullets.TrueArtilleryBulletType;
+import hjsonpp.expand.entities.parts.AdvandedPart;
 import hjsonpp.expand.graphics.g3d.*;
 import hjsonpp.expand.wproc.*;
 import mindustry.game.EventType;
@@ -20,6 +22,7 @@ public class HjsonPlusPlusMod extends Mod{
         Events.on(EventType.FileTreeInitEvent.class, e ->
                 app.post(HjsonppShaders::load)
         );
+        ClassMap.classes.put("AdvancedPartProgress", AdvandedPart.AdvPartProg.class);
         ClassMap.classes.put("AdvancedConsumeGenerator", AdvancedConsumeGenerator.class);
         ClassMap.classes.put("AdvancedHeaterGenerator", AdvancedHeaterGenerator.class);
         ClassMap.classes.put("TileGenerator", TileGenerator.class);
@@ -27,7 +30,7 @@ public class HjsonPlusPlusMod extends Mod{
         ClassMap.classes.put("GeneratorCoreBlock", GeneratorCoreBlock.class);
         ClassMap.classes.put("ChanceCrafter", ChanceCrafter.class);
         ClassMap.classes.put("AccelItemTurret", AccelItemTurret.class);
-        ClassMap.classes.put("OverHeatTurret", OverHeatTurret.class);
+        ClassMap.classes.put("OverheatTurret", OverheatTurret.class);
         ClassMap.classes.put("RestorableWall", RestorableWall.class);
         ClassMap.classes.put("AdjustableShieldWall", AdjustableShieldWall.class);
         ClassMap.classes.put("AdjustableBeamNode", AdjustableBeamNode.class);
@@ -40,6 +43,7 @@ public class HjsonPlusPlusMod extends Mod{
         ClassMap.classes.put("MultiRecipeCrafter", MultiRecipeCrafter.class);
         ClassMap.classes.put("OverloadAbility", OverloadAbility.class);
         ClassMap.classes.put("RingMesh", RingMesh.class);
+        ClassMap.classes.put("TrueArtilleryBulletType", TrueArtilleryBulletType.class);
     }
 
     @Override

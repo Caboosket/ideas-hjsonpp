@@ -415,7 +415,7 @@ public class MultiRecipeCrafter extends Block {
                                                 if(recipe.powerUse != 0){
                                                     td.table(pwrUse ->{
                                                         pwrUse.image(Icon.power).color(Pal.accent);
-                                                        pwrUse.add(recipe.powerUse + "/s");
+                                                        pwrUse.add(recipe.powerUse * 60 + "/s");
                                                     });
                                                 }
                                                 td.table(arrow -> {

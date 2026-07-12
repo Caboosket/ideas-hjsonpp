@@ -249,7 +249,7 @@ public class RecipeIO {
                     }
                     if(this.powerUse != 0) in.table(pwrUse -> {
                         pwrUse.image(Icon.power).color(Pal.accent).size(40);
-                        pwrUse.add(this.powerUse + "/s");
+                        pwrUse.add(this.powerUse * 60 + "/s");
                     });
                 }).left().pad(10f);
 

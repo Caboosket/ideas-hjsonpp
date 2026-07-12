@@ -1,9 +1,11 @@
 package hjsonpp;
 
 import arc.func.Cons;
+import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.struct.IntSet;
+import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.core.World;
 import mindustry.entities.Units;
@@ -11,6 +13,7 @@ import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.gen.Posc;
 
+import static java.lang.Math.cos;
 import static mindustry.Vars.tilesize;
 import static mindustry.Vars.world;
 
@@ -69,5 +72,15 @@ public class HppUtilities {
                 }
             }
         }
+    }
+
+    public static Color lerpColor(Color color1, Color color2, float progress) {
+        progress = Mathf.clamp(progress, 0f, 1f);
+        return Tmp.c1.set(color1).lerp(color2, progress);
+    }
+
+    public static Color flashingColor(Color color1, Color color2, float mag){
+        float pr =  Mathf.absin(Time.time, 1, mag);
+        return Tmp.c1.set(color1).lerp(color2, pr);
     }
 }
