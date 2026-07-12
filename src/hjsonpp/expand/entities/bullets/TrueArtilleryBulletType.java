@@ -22,18 +22,18 @@ import mindustry.graphics.Trail;
 
 import static mindustry.Vars.headless;
 
+//A type of bullet that follows a high-angle trajectory.
 public class TrueArtilleryBulletType extends BasicBulletType {
 
+    //Trail effect params
     public float trailMult = 1f, trailSize = 4f;
+    //Bullet trajectory height
+    public float trajectoryZ = 50;
+    //Degree of bullet rotation deviation along the trajectory
+    public float angleFactor = 0.25f;
 
     private static float cdist = 0f;
     private static Unit result;
-
-    //projectile trajectory height
-    public float trajectoryZ = 50;
-
-    public float angleFactor = 0.25f;
-
     private float bulletZ;
 
     public TrueArtilleryBulletType() {
