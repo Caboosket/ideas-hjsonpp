@@ -84,7 +84,6 @@ public class ModeTurret extends ItemTurret{
     public static class TurretMode{
         @Nullable
         public ObjectMap<Item, BulletType> modeAmmoTypes;
-
         //Additional description for stats (Write a bundle-key)
         @Nullable
         public String description;

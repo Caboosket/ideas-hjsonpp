@@ -5,6 +5,8 @@ import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.util.Strings;
 import arc.util.Time;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import hjsonpp.expand.drawers.DrawOverheatTurret;
 import mindustry.entities.bullet.BulletType;
 import mindustry.graphics.Pal;
@@ -35,6 +37,8 @@ public class OverheatTurret extends ItemTurret{
     public boolean cooldown = false;
     //If true turret takes damage when temperature higher than meltingTemperature
     public boolean melting = true;
+
+    public float shootPenalty = 0;
     //Per tick
     public float meltingDamage = 0.25f;
     //The portion of health that remains even upon overheating
@@ -56,9 +60,9 @@ public class OverheatTurret extends ItemTurret{
         Color color= Pal.redDust;
         addBar("temperature", (OverheatTurret.OverHeatTurretBuild entity) ->
                 new Bar(
-                        () -> Core.bundle.format("bar.temperature", Strings.autoFixed(entity.temperature, 0)) + '/' + overheatTemperature + '°',
+                        () -> Core.bundle.format("bar.temperature", Strings.autoFixed(entity.temperature, 0)) + '/' + (cooldown ? overheatTemperature : meltingTemperature) + '°' ,
                         () -> !(melting) ? lerpColor(Pal.redDust, Color.valueOf("fc4242"), entity.temperature / overheatTemperature) : (entity.temperature < meltingTemperature) ? lerpColor(Pal.redDust, Color.valueOf("fc4242"), entity.temperature / meltingTemperature) : flashingColor(Pal.redDust, Color.valueOf("d60000"), 3),
-                        () -> entity.temperature / overheatTemperature
+                        () -> entity.temperature / (cooldown ? overheatTemperature : meltingTemperature)
                 )
         );
     }
@@ -66,6 +70,7 @@ public class OverheatTurret extends ItemTurret{
     public class OverHeatTurretBuild extends ItemTurretBuild{
         public float temperature = startTemperature;
         public boolean overheated = false;
+        public float penalty;
 
         @Override
         public void update(){
@@ -87,11 +92,12 @@ public class OverheatTurret extends ItemTurret{
         }
 
         public void updateOverheat(){
+            penalty = Mathf.approachDelta(penalty, 0, 1);
             if(temperature >= meltingTemperature & melting){
                 this.damage(meltingDamage);
             }
             overheated = overheated || temperature >= overheatTemperature & cooldown;
-            temperature = overheated ? temperature : Mathf.approachDelta(temperature, startTemperature, cooldownSpeed);
+            temperature = overheated || penalty > 0 ? temperature : Mathf.approachDelta(temperature, startTemperature, cooldownSpeed);
         }
 
         public void updateCooldown(){
@@ -118,7 +124,7 @@ public class OverheatTurret extends ItemTurret{
                 float capacity = coolant instanceof ConsumeLiquidFilter filter ? filter.getConsumed(this).heatCapacity : (coolant.consumes(liquids.current()) ? liquids.current().heatCapacity : 0.4f);
                 float amount = coolant.amount * coolant.efficiency(this);
                 coolant.update(this);
-                temperature = Mathf.approachDelta(temperature, startTemperature, amount * capacity * (coolantEfficiencyDepends ? coolantMultiplier * coolantCooldownEfficiency : coolantCooldownEfficiency));
+                temperature = penalty >0 ? temperature : Mathf.approachDelta(temperature, startTemperature, amount * capacity * (coolantEfficiencyDepends ? coolantMultiplier * coolantCooldownEfficiency : coolantCooldownEfficiency));
                 reloadCounter += amount * edelta() * capacity * coolantMultiplier * ammoReloadMultiplier();
 
                 if(Mathf.chance(0.06 * amount)){
@@ -136,6 +142,23 @@ public class OverheatTurret extends ItemTurret{
         public void shoot(BulletType type){
             super.shoot(type);
             temperature += temperaturePerShot;
+            penalty = shootPenalty;
+        }
+
+        @Override
+        public void write(Writes write){
+            super.write(write);
+            write.f(temperature);
+            write.f(penalty);
+            write.bool(overheated);
+        }
+
+        @Override
+        public void read(Reads read, byte revision){
+            super.read(read, revision);
+            temperature = read.f();
+            penalty = read.f();
+            overheated = read.bool();
         }
     }
 }

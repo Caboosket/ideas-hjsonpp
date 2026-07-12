@@ -2,7 +2,6 @@ package hjsonpp.expand.entities.bullets;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
-import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.util.Time;
@@ -10,7 +9,6 @@ import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Units;
-import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
@@ -23,7 +21,7 @@ import mindustry.graphics.Trail;
 import static mindustry.Vars.headless;
 
 //A type of bullet that follows a high-angle trajectory.
-public class TrueArtilleryBulletType extends BasicBulletType {
+public class AdvancedArtilleryBulletType extends BasicBulletType {
 
     //Trail effect params
     public float trailMult = 1f, trailSize = 4f;
@@ -34,9 +32,8 @@ public class TrueArtilleryBulletType extends BasicBulletType {
 
     private static float cdist = 0f;
     private static Unit result;
-    private float bulletZ;
 
-    public TrueArtilleryBulletType() {
+    public AdvancedArtilleryBulletType() {
         super(1, 1, "shell");
         collidesTiles = false;
         collides = false;
@@ -57,17 +54,6 @@ public class TrueArtilleryBulletType extends BasicBulletType {
     public void init(Bullet b){
         super.init(b);
         drawSize += trajectoryZ * 1.2f;
-    }
-
-    @Override
-    public void updateTrail(Bullet b){
-        if(!headless && trailLength > 0){
-            if(b.trail == null){
-                b.trail = new Trail(trailLength);
-            }
-            b.trail.length = trailLength;
-            b.trail.update(b.x, b.y + bulletZ, trailInterp.apply(b.fin()) * (1f + (trailSinMag > 0 ? Mathf.absin(Time.time, trailSinScl, trailSinMag) : 0f)));
-        }
     }
 
     @Override
@@ -106,6 +92,20 @@ public class TrueArtilleryBulletType extends BasicBulletType {
     }
 
     @Override
+    public void updateTrail(Bullet b){
+        float pr = Mathf.sinDeg(b.time() / b.lifetime * 180);
+        float bulletZ =  Mathf.sinDeg(b.rotation()) * pr * trajectoryZ * (b.lifetime / b.type.lifetime);
+
+        if(!headless && trailLength > 0){
+            if(b.trail == null){
+                b.trail = new Trail(trailLength);
+            }
+            b.trail.length = trailLength;
+            b.trail.update(b.x, b.y + bulletZ, trailInterp.apply(b.fin()) * (1f + (trailSinMag > 0 ? Mathf.absin(Time.time, trailSinScl, trailSinMag) : 0f)));
+        }
+    }
+
+    @Override
     public void draw(Bullet b){
         float zLayer = Draw.z();
         if(trailLength > 0 && b.trail != null){
@@ -117,17 +117,16 @@ public class TrueArtilleryBulletType extends BasicBulletType {
 
         float offset = -90 + (spin != 0 ? Mathf.randomSeed(b.id, 360f) + b.time * spin : 0f) + rotationOffset;
         float pr = Mathf.sinDeg(b.time() / b.lifetime * 180);
-
         float shrink = shrinkInterp.apply(b.fout());
         float height = this.height * ((1f - shrinkY) + shrinkY * shrink);
         float width = this.width * ((1f - shrinkX) + shrinkX * shrink);
 
-        float cPr = Mathf.sinDeg(b.time() / b.lifetime * 180 + 90);
+        float cPr =- Mathf.sinDeg(b.time() / b.lifetime * 180 + 115);
 
 
 
 
-        bulletZ =  Mathf.sinDeg(b.rotation()) * pr * trajectoryZ * (b.lifetime / b.type.lifetime);
+        float bulletZ =  Mathf.sinDeg(b.rotation()) * pr * trajectoryZ * (b.lifetime / b.type.lifetime);
 
         if(b.timer(0, (3 + b.fslope() * 2f) * trailMult)){
             trailEffect.at(b.x, b.y + bulletZ, trailRotation ? b.rotation() : b.fslope() * trailSize, backColor);
@@ -144,11 +143,11 @@ public class TrueArtilleryBulletType extends BasicBulletType {
         Color mix = Tmp.c1.set(mixColorFrom).lerp(mixColorTo, b.fin());
         Draw.mixcol(mix, mix.a);
 
-        float angle = b.rotation() > 180 ? 270 : 90;
+        float str = Mathf.cosDeg(b.rotation()) * Mathf.sinDeg(b.rotation());
 
-        float str = Math.abs(Mathf.sinDeg(b.rotation()));
+        float degree = 90 * angleFactor * b.fin() * cPr * str;
 
-        float drawRotation = Mathf.lerp(b.rotation(), angle, cPr * angleFactor * str);
+        float drawRotation = b.rotation() - degree;
 
         if(backRegion.found()){
             Draw.color(backColor);

@@ -95,8 +95,10 @@ public class OverloadAbility extends Ability {
         if(lightningLength > 0){
             float lx = unit.x + Angles.trnsx(unit.rotation, this.y, this.x), ly = unit.y + Angles.trnsy(unit.rotation, this.y, this.x);
 
-            Lightning.create(unit.team, color, damage, lx, ly, unit.rotation + Mathf.randomSeed(unit.id, 360f), lightningLength);
+            Lightning.create(unit.team, color, damage, lx, ly, unit.rotation + Mathf.randomSeed((long) Time.time + unit.id(), 360f), lightningLength);
         }
-        if(bullet != null) bullet.create(unit, unit.team, x, y, unit.rotation + bulletAngle + Mathf.randomSeedRange(unit.id +1, bulletSpread));
+        if(bullet != null) bullet.create(unit, unit.team, x, y, unit.rotation + bulletAngle + Mathf.randomSeedRange((long) Time.time + unit.id() + 1, bulletSpread));
     }
+
+
 }

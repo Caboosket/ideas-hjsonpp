@@ -7,7 +7,7 @@ import hjsonpp.expand.blocks.defense.*;
 import hjsonpp.expand.blocks.environment.*;
 import hjsonpp.expand.blocks.storage.*;
 import hjsonpp.expand.customAbilities.*;
-import hjsonpp.expand.entities.bullets.TrueArtilleryBulletType;
+import hjsonpp.expand.entities.bullets.AdvancedArtilleryBulletType;
 import hjsonpp.expand.entities.parts.AdvandedPart;
 import hjsonpp.expand.graphics.g3d.*;
 import hjsonpp.expand.wproc.*;
@@ -43,7 +43,7 @@ public class HjsonPlusPlusMod extends Mod{
         ClassMap.classes.put("MultiRecipeCrafter", MultiRecipeCrafter.class);
         ClassMap.classes.put("OverloadAbility", OverloadAbility.class);
         ClassMap.classes.put("RingMesh", RingMesh.class);
-        ClassMap.classes.put("TrueArtilleryBulletType", TrueArtilleryBulletType.class);
+        ClassMap.classes.put("AdvancedArtilleryBulletType", AdvancedArtilleryBulletType.class);
     }
 
     @Override
