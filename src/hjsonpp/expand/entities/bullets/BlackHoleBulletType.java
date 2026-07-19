@@ -26,7 +26,6 @@ public class BlackHoleBulletType extends BulletType {
     public float inclinedDiskwidth = 0.8f;
     public float offset = 7;
     public Color accretionDiskColor = Color.valueOf("fffffe");
-    public DrawPart.PartProgress progress = DrawPart.PartProgress.life;
     public boolean clampProgress = true;
     public float factorRadius = 170;
     public float pullStrength = 3;
