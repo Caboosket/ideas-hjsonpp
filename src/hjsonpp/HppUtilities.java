@@ -36,10 +36,10 @@ public class HppUtilities {
         Units.nearbyEnemies(team, x - radius, y - radius, radius * 2f, radius * 2f, unit -> {
             if(!unit.dead && unit.hittable() && unit.within(x, y, radius + unit.hitSize / 2f)){
                 if(pierceArmor){
-                    unit.damagePierce(damage * (1f - unit.dst(x, y) / radius));
-                }else if(armorMultiplier != 1){
-                    unit.damage(damage * (1f - unit.dst(x, y) / radius));
-                } else unit.damageArmorMult(damage * (1f - unit.dst(x, y) / radius), armorMultiplier);
+                    unit.damagePierce(damage * (1f - unit.dst(x, y) / (radius + unit.hitSize / 2)));
+                }else if(armorMultiplier == 1){
+                    unit.damage(damage * (1f - unit.dst(x, y) / (radius + unit.hitSize / 2)));
+                } else unit.damageArmorMult(damage * (1f - unit.dst(x, y) / (radius + unit.hitSize / 2)), armorMultiplier);
             }
         });
 

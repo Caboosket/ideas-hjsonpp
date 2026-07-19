@@ -1,4 +1,4 @@
-package hjsonpp.expand;
+package hjsonpp.expand.entities.bullets;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -6,6 +6,7 @@ import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.util.Time;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
@@ -25,7 +26,6 @@ public class BlackHoleBulletType extends BulletType {
     public float inclinedDiskwidth = 0.8f;
     public float offset = 7;
     public Color accretionDiskColor = Color.valueOf("fffffe");
-    public DrawPart.PartProgress progress = DrawPart.PartProgress.life;
     public boolean clampProgress = true;
     public float factorRadius = 170;
     public float pullStrength = 3;
@@ -52,7 +52,7 @@ public class BlackHoleBulletType extends BulletType {
 
     @Override
     public float continuousDamage(){
-        return damage * 100f / damageInterval * 3f;
+        return damage * (60f / damageInterval);
     }
 
     @Override
@@ -63,12 +63,14 @@ public class BlackHoleBulletType extends BulletType {
         }
         if(b.timer(1, damageInterval)){
             Effect.shake(shake, shake, b.x, b.y);
-            blackHoleUpdate(b.team, b, factorRadius, pullStrength, damage, armorMultiplier, damage * damageMultiplier(b), buildingDamageMultiplier);
+            blackHoleUpdate(b.team, b, factorRadius, Math.max(pullStrength, pullStrength * Time.delta), Math.max(damage, damage * Time.delta), armorMultiplier, damageMultiplier(b), buildingDamageMultiplier);
         }
     }
 
     @Override
     public void draw(Bullet b){
+        drawParts(b);
+        drawTrail(b);
         float px = b.x, py = b.y;
         float prog =  fout(b);
         float diskRad = (eventHorizonRadius) * prog;
@@ -77,21 +79,14 @@ public class BlackHoleBulletType extends BulletType {
         Draw.color(accretionDiskColor);
         Lines.stroke(accretionDiskWidth);
         Lines.circle(px, py, diskRad);
-        for(int s : Mathf.signs) {
-            Fill.rect(px, py, eventHorizonRadius * prog, eventHorizonRadius * 1.5f * prog, (90 + offset) * s);
-            Fill.rect(px, py, eventHorizonRadius / 2 * prog, eventHorizonRadius * 1.85f * prog, (90 + offset) * s);
-        }
-
         Draw.z(120);
         Draw.color(Color.black);
         Fill.circle(px, py, eventHorizonRadius * prog);
-
     }
 
     public float fout(Bullet b){
         return Interp.sineOut.apply(
-                Mathf.curve(b.time, 0f, growTime)
-                        - Mathf.curve(b.time, b.lifetime - shrinkTime, b.lifetime)
+                Mathf.curve(b.time, 0f, growTime) - Mathf.curve(b.time, b.lifetime - shrinkTime, b.lifetime)
         );
     }
 

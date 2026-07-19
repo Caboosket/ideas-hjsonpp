@@ -8,6 +8,7 @@ import hjsonpp.expand.blocks.environment.*;
 import hjsonpp.expand.blocks.storage.*;
 import hjsonpp.expand.customAbilities.*;
 import hjsonpp.expand.entities.bullets.AdvancedArtilleryBulletType;
+import hjsonpp.expand.entities.bullets.BlackHoleBulletType;
 import hjsonpp.expand.entities.parts.AdvandedPart;
 import hjsonpp.expand.graphics.g3d.*;
 import hjsonpp.expand.wproc.*;
@@ -38,7 +39,7 @@ public class HjsonPlusPlusMod extends Mod{
         ClassMap.classes.put("DrawTeam", hjsonpp.expand.DrawTeam.class);
         ClassMap.classes.put("EffectWeapon", hjsonpp.expand.EffectWeapon.class);
         ClassMap.classes.put("CustomEffects", hjsonpp.expand.CustomEffects.class);
-        ClassMap.classes.put("BlackHoleBulletType", hjsonpp.expand.BlackHoleBulletType.class);
+        ClassMap.classes.put("BlackHoleBulletType", BlackHoleBulletType.class);
         ClassMap.classes.put("ModeTurret", ModeTurret.class);
         ClassMap.classes.put("MultiRecipeCrafter", MultiRecipeCrafter.class);
         ClassMap.classes.put("OverloadAbility", OverloadAbility.class);

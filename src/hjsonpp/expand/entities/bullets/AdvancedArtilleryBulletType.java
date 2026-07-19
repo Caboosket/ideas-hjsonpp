@@ -30,6 +30,8 @@ public class AdvancedArtilleryBulletType extends BasicBulletType {
     //Degree of bullet rotation deviation along the trajectory
     public float angleFactor = 0.25f;
 
+    public float shadowIncreaseFactor = 1f;
+
     private static float cdist = 0f;
     private static Unit result;
 
@@ -136,7 +138,7 @@ public class AdvancedArtilleryBulletType extends BasicBulletType {
 
         Draw.color(Pal.shadow, Pal.shadow.a);
 
-        Draw.rect(frontRegion, b.x , b.y, Mathf.lerp(width, width + trajectoryZ / 8, pr * (b.lifetime / b.type.lifetime)), Mathf.lerp(height, height + trajectoryZ / 8, pr * (b.lifetime / b.type.lifetime)), b.rotation() + offset);
+        Draw.rect(frontRegion, b.x , b.y, Mathf.lerp(width, width + trajectoryZ / 8, pr * (b.lifetime / b.type.lifetime) * shadowIncreaseFactor), Mathf.lerp(height, height + trajectoryZ / 8, pr * (b.lifetime / b.type.lifetime) * shadowIncreaseFactor), b.rotation() + offset);
 
         Draw.z(zLayer);
 
